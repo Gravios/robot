@@ -3,7 +3,7 @@ import pygame
 from PIL import Image
 
 # Create a var for storing an IP address:
-ip = "192.168.2.101"
+ip = "192.168.137.168"
 
 WIDTH = 1280
 HEIGHT = 720

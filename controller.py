@@ -32,7 +32,7 @@ frame = vs.read()
 
 
 # from multiprocessing import Process
-pio = mvnt.setup(True)
+#pio = mvnt.setup(True)
 
 
 x = 0
@@ -43,11 +43,11 @@ while True:
     s.sendall(frame)
 
     # CV2 event handling
-    #key = cv2.waitKey(1) & 0xFF
-    #if key == ord("a"):
-    #    break
-    #elif key == ord("q"):
-    #    break
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("a"):
+        break
+    elif key == ord("q"):
+        break
 
 
     # PyGame event handling

@@ -4,9 +4,11 @@ import json5
 
 conf = json5.load(open("conf.json5"))
 
+host = conf["servers"]['cog']['ip']
+port = conf["servers"]['cog']['port']
+
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((conf["servers"]['web']['ip'],
-             conf["servers"]['web']['port']))
+server.bind((host, port))
 print(host, ":", port)
 
 
@@ -20,6 +22,7 @@ class Client(Thread):
     def run(self):
         while 1:
             print('Client sent:', self.sock.recv(1024).decode())
+
             self.sock.send(b'Oi you sent something to me')
 
 
