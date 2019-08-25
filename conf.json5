@@ -1,0 +1,8 @@
+{
+  // configuration of various raspi servers
+  servers: {
+    mot: { ip: "192.168.2.101", port: 5000},
+    vis: { ip: "192.168.2.102", port: 5000},
+    web: { ip: "192.168.2.102", port: 8080}
+  }
+}
