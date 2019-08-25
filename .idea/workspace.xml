@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fcc5d54c-0418-48d5-985a-ab2fc8c77140" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf.json5" beforeDir="false" afterPath="$PROJECT_DIR$/conf.json5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/remote_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/remote_client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/robot_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/robot_controller.py" afterDir="false" />
     </list>
@@ -21,7 +18,7 @@
   <component name="ProjectId" id="1PvmxHpBNA1UwW87diDi6jHhSMw" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -58,7 +55,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566769144977</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="adding cog server">
+      <created>1566769185493</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1566769185493</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -76,6 +80,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="adding vcs" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding vcs" />
+    <MESSAGE value="adding cog server" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding cog server" />
   </component>
 </project>

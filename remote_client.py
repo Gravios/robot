@@ -3,7 +3,11 @@ import pygame
 from PIL import Image
 
 # Create a var for storing an IP address:
-ip = "192.168.137.168"
+
+conf = json5.load(open("conf.json5"))
+remote_host = conf["servers"]['vis']['ip']
+remote_port = conf["servers"]['vis']['port']
+
 
 WIDTH = 1280
 HEIGHT = 720
@@ -17,6 +21,7 @@ clock = pygame.time.Clock()
 timer = 0
 previousImage = ""
 image = ""
+data = 0
 
 # Main program loop:
 while True:
@@ -27,7 +32,7 @@ while True:
     # Receive data
     if timer < 1:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_socket.connect((str(ip), 5000))
+        client_socket.connect((remote_host, remote_port))
         data = client_socket.recv(1024000)
         timer = 30
 
@@ -45,6 +50,6 @@ while True:
     except:
         image = previousImage
     output = image
-    screen.blit(output, (0,0))
+    screen.blit(output, (0, 0))
     clock.tick(60)
     pygame.display.flip()
