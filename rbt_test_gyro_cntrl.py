@@ -5,6 +5,14 @@ import gyro as gy
 import math
 import numpy as np
 from threading import *
+
+import pigpio
+
+pi = pigpio.pi()
+
+
+
+
          
 KEY_REPEAT_SETTING = (200,70)         
 POSITON_BUFFER_SIZE = 8         
@@ -13,25 +21,37 @@ POSITON_HISTORY_SIZE = 4
 class LabelCollection(object):
     def __init__(self):
         self.font = pg.font.SysFont("monospace", 15)
-        self.gyro = self.font.render("                                       ", 1, (255,255,0))
+        self.acc  = self.font.render("                                       ", 1, (255,255,0))
+        self.gyr  = self.font.render("                                       ", 1, (255,255,0))        
         self.pos  = self.font.render("                                       ", 1, (255,255,0))
+        self.rot = self.font.render("                                       ", 1, (255,255,0))
         self.fps  = self.font.render("                                       ", 1, (255,255,0))        
         
 
 class TboxCollection(object):        
     def __init__(self,lbls):
-        self.gyro = lbls.gyro.get_rect()
-        self.gyro.x = 10
-        self.gyro.y = 100
+        self.acc = lbls.acc.get_rect()
+        self.acc.x = 10
+        self.acc.y = 100
+        
+        self.gyr = lbls.gyr.get_rect()
+        self.gyr.x = 10
+        self.gyr.y = 150
+        
+        self.rot = lbls.rot.get_rect()
+        self.rot.x = 10
+        self.rot.y = 200
         
         self.pos = lbls.pos.get_rect()
         self.pos.x = 10        
-        self.pos.y = 200
+        self.pos.y = 250
         
         self.fps = lbls.fps.get_rect()
         self.fps.x = 10        
         self.fps.y = 300
-        
+
+
+
 class Control(object):
     def __init__(self):
         pg.init()
@@ -49,14 +69,23 @@ class Control(object):
         self.lbls = LabelCollection()
         self.tbox = TboxCollection(self.lbls)
         
-
         self.rect = pg.Rect((50,50,150,50));
+
         self.y = 0;
-        self.yoffset = 16000;
+        self.yoffset = 16000
         self.ybuffer = np.zeros((1,POSITON_BUFFER_SIZE))
         self.yhistory = np.zeros((1,POSITON_HISTORY_SIZE))
+        self.yind = 0;
+        
+        self.y = 0;
+        self.yoffset = 16000
+        self.ybuffer = np.zeros((1,POSITON_BUFFER_SIZE))
+        self.yhistory = np.zeros((1,POSITON_HISTORY_SIZE))
+        self.yind = 0;
 
         self.gyro = gy.Gyro();
+        
+        self.pwm = 0
         
     def event_loop(self):
         for event in pg.event.get():
@@ -88,42 +117,58 @@ class Control(object):
         for i in range(0,POSITON_BUFFER_SIZE-1):
             self.gyro.get_sample()
             self.ybuffer[0,i] = self.y + self.gyro.yacc - self.yoffset;
-        self.yhistory = np.roll(self.yhistory,1)
-        self.yhistory[0] = np.sum(self.ybuffer) / POSITON_BUFFER_SIZE
+        #self.yhistory = np.roll(self.yhistory,1)
+        self.yind = ( self.yind+1, 0 ) [ self.yind+1 == POSITON_HISTORY_SIZE ]        
+        self.yhistory[self.yind] = np.sum(self.ybuffer) / POSITON_BUFFER_SIZE
+        self.y = np.sum(self.yhistory) / POSITON_HISTORY_SIZE
+        
+    def update_gyro(self):
+        for i in range(0,POSITON_BUFFER_SIZE-1):
+            self.gyro.get_sample()
+            self.ybuffer[0,i] = self.gyro.yrot;
+        self.yind = ( 0, self.yind+1 ) [ self.yind+1 == POSITON_HISTORY_SIZE ]
+        self.yhistory[self.yind] = np.sum(self.ybuffer) / POSITON_BUFFER_SIZE
         self.y = np.sum(self.yhistory) / POSITON_HISTORY_SIZE
         
     def update_gyro_label(self):
-        self.lbls.gyro = self.font.render(("xacc: %5d yacc: %5d zacc: %5d" % (self.gyro.xacc,self.gyro.yacc,self.gyro.zacc)),1,(255,255,255))
-        self.screen.blit(self.lbls.gyro, self.tbox.gyro)
+        self.lbls.acc = self.font.render((f"xacc: {self.gyro.xacc} yacc: {self.gyro.yacc} zacc: {self.gyro.zacc}"),1,(255,255,255))
+        self.screen.blit(self.lbls.acc, self.tbox.acc)
+        self.lbls.gyr = self.font.render((f"xgyr: {self.gyro.xgyr} ygyr: {self.gyro.ygyr} zgyr: {self.gyro.zgyr}"),1,(255,255,255))
+        self.screen.blit(self.lbls.gyr, self.tbox.gyr)
+        self.lbls.rot = self.font.render((f"xrot: {self.gyro.xrot} yrot: {self.gyro.yrot} "),1,(255,255,255))
+        self.screen.blit(self.lbls.rot, self.tbox.rot)
     
     def main_loop(self):
-
 
         self.screen.fill(self.color)
         pg.draw.rect(self.screen,(0,0,128), self.rect)        
         while not self.done:
             self.screen.fill(self.color)
             self.event_loop()
+            pg.draw.rect(self.screen,(0,0,128), self.rect)        
             
             self.gyro.get_sample();
             self.update_gyro_label();
 
-            # UPDATE y-position and rectangle position
-            self.update_position()            
-            self.rect.move_ip(0,self.y/10);
-            self.rect.y = self.y/10;
+            self.pwm = (self.y/(math.pi/2))*1000+1500
 
             self.lbls.fps = self.font.render(f"fps: {self.clock.get_fps()}",1,(255,255,255))
             self.screen.blit(self.lbls.fps, self.tbox.fps)
-
-            self.lbls.pos = self.font.render(f"pos: {self.y}",1,(255,255,255))
+            #self.lbls.pos = self.font.render(f"pos: {self.y}",1,(255,255,255))
+            self.lbls.pos = self.font.render(f"pos: {self.pwm}",1,(255,255,255))            
             self.screen.blit(self.lbls.pos, self.tbox.pos)
             
+            pg.display.update((self.tbox.acc,self.tbox.gyr,self.tbox.rot,self.tbox.pos,self.tbox.fps))
+            #pg.display.update()
             
-
-            pg.display.update((self.tbox.gyro,self.tbox.pos,self.tbox.fps))
-            #pg.display.update()            
             self.clock.tick(self.fps)
+            
+            # UPDATE y-position and rectangle position
+            #self.update_position()
+            self.update_gyro()
+            #self.rect.move_ip(0,self.y/10);
+            #self.rect.y = self.y/10;
+            pi.set_servo_pulsewidth(18,self.pwm)
 
             
 

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import smbus
 import math
+import numpy as np
 
 # Register
 POWER_MGMT_1 = 0x6b
@@ -25,7 +26,7 @@ class Gyro(object):
         self.zgyrScale = 0
         self.xaccScale = 0
         self.yaccScale = 0
-        self.zaccScale = 0
+        self.zaccScale = 0        
         
     def read_byte(self,reg):
         return self.bus.read_byte_data(self.addresss,reg)
@@ -33,15 +34,15 @@ class Gyro(object):
     def read_word(self,reg):
         h = self.bus.read_byte_data(self.address, reg)
         l = self.bus.read_byte_data(self.address, reg+1)
-        value = (h << 8) + l
-        return value
+        return (h << 8) + l
     
     def read_word_2c(self,reg):
         val = self.read_word(reg)
-        if (val >= 0x8000):
-            return -((65535 - val) + 1)
-        else:
-            return val
+        return ( val,  -((65535 - val) + 1) ) [val >= 0x8000]
+        #if (val >= 0x8000):
+        #    return -((65535 - val) + 1)
+        #else:
+        #    return val
     def get_sample(self):
         self.xgyr = self.read_word_2c(0x43)
         self.ygyr = self.read_word_2c(0x45)
@@ -57,6 +58,16 @@ class Gyro(object):
         self.zaccScale = self.zacc / 16384.0
         self.compute_y_rotation()
         self.compute_x_rotation()
+        
+    #def update_gyro(self):
+    #    for i in range(0,POSITON_BUFFER_SIZE-1):
+    #        self.get_sample()
+    #        self.ybuffer[0,i] = self.gyro.yrot;
+    #        
+    #    self.bind = ( self.bind+1, 0 ) [ self.yind+1 == POSITON_HISTORY_SIZE ]
+    #    self.yhistory[self.bind] = np.sum(self.ybuffer) / POSITON_BUFFER_SIZE
+    #    self.y = np.sum(self.yhistory) / POSITON_HISTORY_SIZE
+        
     
     def compute_y_rotation(self):
         self.yrot = math.atan2(self.xaccScale, dist(self.yaccScale,self.zaccScale))
