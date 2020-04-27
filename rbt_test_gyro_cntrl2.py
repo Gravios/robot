@@ -21,14 +21,14 @@ class LabelCollection(object):
     def __init__(self):
         self.font = pg.font.SysFont("monospace", 15)
         self.acc  = self.font.render("                                                    \
-                                                                             ", 1, (255,255,0))
+                                                                             ", 1, (255,255,255),(0,0,0))
         self.gyr  = self.font.render("                                                    \
-                                                                             ", 1, (255,255,0))
+                                                                             ", 1, (255,255,255),(0,0,0))
         self.pos  = self.font.render("                                                    \
-                                                                             ", 1, (255,255,0))
+                                                                             ", 1, (255,255,255),(0,0,0))
         self.rot  = self.font.render("                                                    \
-                                                                             ", 1, (255,255,0))
-        self.fps  = self.font.render("                                       ", 1, (255,255,0))
+                                                                             ", 1, (255,255,255),(0,0,0))
+        self.fps  = self.font.render("                                       ", 1, (255,255,255),(0,0,0))
         
 
 class TboxCollection(object):        
@@ -135,11 +135,11 @@ class Control(object):
         self.y = self.gyro.yrot
         
     def update_gyro_label(self):
-        self.lbls.acc = self.font.render((f"xacc: {self.gyro.acc[0]:.5f} yacc: {self.gyro.acc[1]:.5f} zacc: {self.gyro.acc[2]:.5f}"),1,(255,255,255))
+        self.lbls.acc = self.font.render((f"xacc: {self.gyro.acc[0]:.5f} yacc: {self.gyro.acc[1]:.5f} zacc: {self.gyro.acc[2]:.5f}"),1,(255,255,255),(0,0,0))
         self.screen.blit(self.lbls.acc, self.tbox.acc)
-        self.lbls.gyr = self.font.render((f"xgyr: {self.gyro.gyr[0]:.5f} ygyr: {self.gyro.gyr[1]:.5f} zgyr: {self.gyro.gyr[2]:.5f}"),1,(255,255,255))
+        self.lbls.gyr = self.font.render((f"xgyr: {self.gyro.gyr[0]:.5f} ygyr: {self.gyro.gyr[1]:.5f} zgyr: {self.gyro.gyr[2]:.5f}"),1,(255,255,255),(0,0,0))
         self.screen.blit(self.lbls.gyr, self.tbox.gyr)
-        self.lbls.rot = self.font.render((f"xrot: {self.gyro.xrot:.5f} yrot: {self.gyro.yrot:.5f} zrot: {self.gyro.zrot:.5f} "),1,(255,255,255))
+        self.lbls.rot = self.font.render((f"xrot: {self.gyro.xrot:.5f} yrot: {self.gyro.yrot:.5f} zrot: {self.gyro.zrot:.5f} "),1,(255,255,255),(0,0,0))
         self.screen.blit(self.lbls.rot, self.tbox.rot)
     
     def main_loop(self):
@@ -156,10 +156,10 @@ class Control(object):
 
             self.pwm = (self.y/(math.pi/2))*1000+1500
 
-            self.lbls.fps = self.font.render(f"fps: {self.clock.get_fps()}",1,(255,255,255))
+            self.lbls.fps = self.font.render(f"fps: {self.clock.get_fps()}",1,(255,255,255),(0,0,0))
             self.screen.blit(self.lbls.fps, self.tbox.fps)
             #self.lbls.pos = self.font.render(f"pos: {self.y}",1,(255,255,255))
-            self.lbls.pos = self.font.render(f"pos: {self.pwm}",1,(255,255,255))            
+            self.lbls.pos = self.font.render(f"pos: {self.pwm}",1,(255,255,255),(0,0,0))
             self.screen.blit(self.lbls.pos, self.tbox.pos)
             
             pg.display.update((self.tbox.acc,self.tbox.gyr,self.tbox.rot,self.tbox.pos,self.tbox.fps))
