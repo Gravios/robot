@@ -6,8 +6,8 @@ import math
 import numpy as np
 from threading import *
 
-#import pigpio
-#pi = pigpio.pi()
+import pigpio
+pi = pigpio.pi()
 
 
 
@@ -172,7 +172,7 @@ class Control(object):
             self.update_gyro()
             #self.rect.move_ip(0,self.y/10);
             #self.rect.y = self.y/10;
-            #pi.set_servo_pulsewidth(18,self.pwm)
+            pi.set_servo_pulsewidth(18,self.pwm)
 
             
 
