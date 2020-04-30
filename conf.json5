@@ -1,7 +1,8 @@
 {
   // configuration of various raspi servers
   servers: {
-    mot: { ip: "192.168.2.101", port: 5000},
+    mot: { ip: "192.168.2.127", port: 5000},
+    core: { ip: "192.168.2.140", port: 5000},
     vis: { ip: "192.168.2.102", port: 5000},
     web: { ip: "192.168.2.102", port: 8080},
     cog: { ip: "192.168.137.168", port: 5000}

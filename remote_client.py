@@ -5,8 +5,8 @@ from PIL import Image
 # Create a var for storing an IP address:
 
 conf = json5.load(open("conf.json5"))
-remote_host = conf["servers"]['vis']['ip']
-remote_port = conf["servers"]['vis']['port']
+remote_host = conf["servers"]['mot']['ip']
+remote_port = conf["servers"]['mot']['port']
 
 
 WIDTH = 1280
